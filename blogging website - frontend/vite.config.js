@@ -1,0 +1,10 @@
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  // define: {
+  //   'import.meta.env.VITE_SERVER_DOMAIN': JSON.stringify(process.env.VITE_SERVER_DOMAIN || 'http://localhost:5000'),
+  // },
+})
