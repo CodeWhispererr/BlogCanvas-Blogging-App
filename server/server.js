@@ -6,7 +6,9 @@ import { nanoid } from 'nanoid';
 import jwt from "jsonwebtoken";
 import cors from "cors";
 import aws from "aws-sdk";
-
+import admin from "firebase-admin"
+import serviceAccountKey from "./blogcanvas-blog-website-firebase-adminsdk-qtlrz-a6707adc16.json" assert {type: 'json'}
+import { getAuth } from "firebase-admin/auth"
 const app = express();
 
 
@@ -19,6 +21,10 @@ app.use(cors())
 app.use(express.json());
 
 const port = process.env.PORT || 5000;
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccountKey)
+})
 
 let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
 let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
@@ -136,6 +142,54 @@ app.post("/signup", (req, res) => {
     })
 })
 
+app.post("/google-auth", async (req, res) => {
+    let { access_token } = req.body;
+    getAuth()
+        .verifyIdToken(access_token)
+        .then(async (decodedUser) => {
+            let { email, name, picture } = decodedUser;
+
+            picture = picture.replace("s96-c", "s384-c")
+
+            let user = await User.findOne({ "personal_info.email": email })
+                .select("personal_info.fullname personal_info.username personal_info.profile_img google_auth").then((u) => {
+                    return u || null
+                })
+                .catch(err => {
+                    return res.status(500).json({ "error": err.message })
+                })
+
+            if (user) {
+                if(!user.google_auth){
+                    return res.status(403).json({"error":"Please login with email and the password"})
+                }
+            }
+            else{
+                let username= await generateUsername(email);
+                user= new User({
+                    personal_info:{fullname:name,email,username},
+                    google_auth:true
+                })
+                await user.save().then((u)=>{
+                    user=u;
+                })
+                .catch(err=>{
+                    return res.status(500).json({"error":err.message})
+                })
+            }
+
+            return res.status(200).json(formatDatatoSend(user))
+
+        })
+        .catch(err=>{
+            return res.status(500).json({"error":"Failed to authenticate you with google. Try with another account"})
+        })
+
+
+
+})
+
+
 app.post("/signin", (req, res) => {
     let { email, password } = req.body;
 
@@ -150,18 +204,24 @@ app.post("/signin", (req, res) => {
             if (!user) {
                 return res.status(403).json({ "error": "Email not found" });
             }
-            bcrypt.compare(password, user.personal_info.password, (err, result) => {
-                if (err) {
-                    return res.status(403).json({ "error": "Error occured while login please try again" });
-                }
-                if (!result) {
-                    return res.status(403).json({ "error": "Incorrect Password" });
-                } else {
-                    return res.status(200).json(formatDatatoSend(user))
-                }
-
-
-            })
+            if(!user.google_auth){
+                bcrypt.compare(password, user.personal_info.password, (err, result) => {
+                    if (err) {
+                        return res.status(403).json({ "error": "Error occured while login please try again" });
+                    }
+                    if (!result) {
+                        return res.status(403).json({ "error": "Incorrect Password" });
+                    } else {
+                        return res.status(200).json(formatDatatoSend(user))
+                    }
+    
+    
+                })
+            }
+            else{
+                return res.status(403).json({"error":"Account was created using Google Auth"})
+            }
+           
 
         }).catch(err => {
             console.log(err.message);
@@ -381,15 +441,22 @@ app.get("/trending-blogs", (req, res) => {
 })
 
 app.post("/search-blogs", (req, res) => {
-
     let { tag, page, query, author, eliminate_blog, limit } = req.body;
+    console.log(tag, page, query, author, eliminate_blog, limit);
     let findQuery;
-
-
-    if (tag) {
-        findQuery = { tags: tag, draft: false, blog_id: { $ne: eliminate_blog } };
-    } else if (query) {
+    if (query) {
         findQuery = { draft: false, title: new RegExp(query, 'i') }
+        // findQuery = {
+        //     draft: false,
+        //     $or: [
+        //         { title: new RegExp(query, 'i') },
+        //         { author },
+        //         { tags: tag, blog_id: { $ne: eliminate_blog } }
+        //     ]
+        // };
+    }
+    else if (tag) {
+        findQuery = { tags: tag, draft: false, blog_id: { $ne: eliminate_blog } };
     }
     else if (author) {
         findQuery = { draft: false, author }
@@ -405,6 +472,10 @@ app.post("/search-blogs", (req, res) => {
         .limit(maxLimit)
         .then(blogs => {
             return res.status(200).json({ blogs })
+        })
+        .catch(err => {
+            console.log(err)
+            return res.status(500).json({ error: err.message })
         })
 })
 
@@ -649,12 +720,12 @@ app.post("/delete-blog", verifyJWT, (req, res) => {
 
             // Comment.deleteMany({ blog_id: blog._id }).then(data => console.log('comments deleted'));
 
-            User.findOneAndUpdate({ _id: user_id }, { $pull: { blog: blog._id }, $inc: { "account_info.total_posts": -1 }})
-            .then(user=>console.log('Blog deleted'));
-            return res.status(200).json({status:'done'})
+            User.findOneAndUpdate({ _id: user_id }, { $pull: { blog: blog._id }, $inc: { "account_info.total_posts": -1 } })
+                .then(user => console.log('Blog deleted'));
+            return res.status(200).json({ status: 'done' })
         })
-        .catch(err=>{
-            return res.status(500).json({error:err.message})
+        .catch(err => {
+            return res.status(500).json({ error: err.message })
         })
 })
 
