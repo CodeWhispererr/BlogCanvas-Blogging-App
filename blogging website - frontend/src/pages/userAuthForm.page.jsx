@@ -7,6 +7,7 @@ import AnimationWrapper from '../common/page-animation'
 import axios from "axios"
 import { storeInSession } from '../common/session'
 import { UserContext } from '../App'
+import { authWithGoogle } from '../common/firebase'
 const UserAuthForm = ({ type }) => {
 
     let { userAuth: { access_token }, setUserAuth } = useContext(UserContext)
@@ -58,87 +59,106 @@ const UserAuthForm = ({ type }) => {
         userAuthThroughServer(serverRoute, formData);
     }
 
+    const handleGoogleAuth = (e) => {
+        e.preventDefault();
+
+        authWithGoogle().then(user=>{
+            let serverRoute="/google-auth";
+            let formData={
+                access_token:user.accessToken
+            }
+            userAuthThroughServer(serverRoute,formData)
+        })
+        .catch(err=>{
+            toast.error('trouble logging through google');
+            return console.log(err);
+
+        })
+    }
+
     return (
-        access_token?
-        <Navigate to="/"/>
-        :
-        <AnimationWrapper keyValue={type}>
-            <section className="h-cover flex items-center justify-center">
-                <Toaster
-                    position="top-right"
-                    reverseOrder={false}
-                    gutter={8}
-                    containerClassName="notification-toast"
-                />
-                <form id='formElement' className="w-[80% ] max-w-[400px]">
-                    <h1 className="text-4xl font-gelasio capitalize text-center
+        access_token ?
+            <Navigate to="/" />
+            :
+            <AnimationWrapper keyValue={type}>
+                <section className="h-cover flex items-center justify-center">
+                    <Toaster
+                        position="top-right"
+                        reverseOrder={false}
+                        gutter={8}
+                        containerClassName="notification-toast"
+                    />
+                    <form id='formElement' className="w-[80% ] max-w-[400px]">
+                        <h1 className="text-4xl font-gelasio capitalize text-center
                 mb-24">
-                        {type == "sign-in" ? "Welcome back" : "Join us today"}
-                    </h1>
-                    {
-                        type !== "sign-in" ?
-                            <InputBox
-                                name="fullname"
-                                type="text"
-                                placeholder="Full Name"
-                                icon="fi-rr-search"
-                            />
-                            : ""
-                    }
+                            {type == "sign-in" ? "Welcome back" : "Join us today"}
+                        </h1>
+                        {
+                            type !== "sign-in" ?
+                                <InputBox
+                                    name="fullname"
+                                    type="text"
+                                    placeholder="Full Name"
+                                    icon="fi-rr-search"
+                                />
+                                : ""
+                        }
 
-                    <InputBox
-                        name="email"
-                        type="email"
-                        placeholder="Email"
-                        icon="fi-rr-envelope"
-                    />
-                    <InputBox
-                        name="password"
-                        type="password"
-                        placeholder="Password"
-                        icon="fi-rr-key"
-                    />
+                        <InputBox
+                            name="email"
+                            type="email"
+                            placeholder="Email"
+                            icon="fi-rr-envelope"
+                        />
+                        <InputBox
+                            name="password"
+                            type="password"
+                            placeholder="Password"
+                            icon="fi-rr-key"
+                        />
 
-                    <button
-                        className="btn-dark center mt-14"
-                        type="submit"
-                        onClick={handleSubmit}
-                    >
-                        {type.replace("-", " ")}
-                    </button>
+                        <button
+                            className="btn-dark center mt-14"
+                            type="submit"
+                            onClick={handleSubmit}
+                        >
+                            {type.replace("-", " ")}
+                        </button>
 
-                    <div className="relative w-full flex items-center gap-2 my-10 opacity-10 uppercase text-black font-bold">
-                        <hr className="w-1/2 border-black" />
-                        <p>Or</p>
-                        <hr className="w-1/2 border-black" />
-                    </div>
-                    <button className="btn-dark flex items-center justify-center gap-4 w-[90%] center">
-                        <img src={googleIcon} className='w-5' />
-                        continue with google
-                    </button>
+                        <div className="relative w-full flex items-center gap-2 my-10 opacity-10 uppercase text-black font-bold">
+                            <hr className="w-1/2 border-black" />
+                            <p>Or</p>
+                            <hr className="w-1/2 border-black" />
+                        </div>
+                        <button className="btn-dark flex items-center justify-center gap-4 w-[90%] center"
+                            onClick={handleGoogleAuth}
+                        >
+                            <img src={googleIcon} className='w-5' />
+                            continue with google
+                        </button>
 
-                    {
-                        type == "sign-in" ?
-                            <p className="mt-6 text-dark-grey text-xl text-center">
-                                Don't have an account?
-                                <Link to="/signup" className="underline text-black text-xl ml-1" >
-                                    Join us today
-                                </Link>
-                            </p>
-                            :
-                            <p className="mt-6 text-dark-grey text-xl text-center">
-                                Already a member ?
-                                <Link to="/signin" className="underline text-black text-xl ml-1" >
-                                    Sign in here.
-                                </Link>
-                            </p>
+                        {
+                            type == "sign-in" ?
+                                <p className="mt-6 text-dark-grey text-xl text-center">
+                                    Don't have an account?
+                                    <Link to="/signup" className="underline text-black text-xl ml-1" >
+                                        Join us today
+                                    </Link>
+                                </p>
+                                :
+                                <p className="mt-6 text-dark-grey text-xl text-center">
+                                    Already a member ?
+                                    <Link to="/signin" className="underline text-black text-xl ml-1" >
+                                        Sign in here.
+                                    </Link>
+                                </p>
 
-                    }
+                        }
 
 
-                </form>
-            </section>
-        </AnimationWrapper>
+                    </form>
+                </section>
+            </AnimationWrapper>
     )
 }
 

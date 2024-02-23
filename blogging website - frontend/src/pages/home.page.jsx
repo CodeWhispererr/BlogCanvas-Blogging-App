@@ -18,7 +18,7 @@ const HomePage = () => {
     let [trendingBlogs, setTrendingBlog] = useState(null);
     let [pageState, setPageState] = useState("home")
 
-    let categories = ["programming", "hollywood", "film making", "social media", "cooking", "travel"]
+    let categories = ["programming", "hollywood", "film making", "social media", "cooking", "wallpaper"]
 
     const fetchLatestBlogs = ({ page = 1 }) => {
         axios.post(import.meta.env.VITE_SERVER_DOMAIN + "/latest-blogs", { page })

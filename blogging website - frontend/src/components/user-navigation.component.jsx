@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Outlet } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AnimationWrapper from '../common/page-animation'
 import { UserContext } from "../App";
 import { useContext } from 'react';
