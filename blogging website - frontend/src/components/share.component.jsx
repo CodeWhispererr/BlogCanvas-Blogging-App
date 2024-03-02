@@ -30,9 +30,12 @@ const ShareButton = () => {
         gutter={8}
         containerClassName="notification-toast"
       />
-      <button
+
+
+
+      {/* <button
         onClick={openShareBox}
-        className="text-black bg-blue-500 hover:bg-blue-600 py-2 px-4 rounded-full"
+        className="text-black bg-transparent px-4 rounded-full"
       >
         <i className="fi fi-rr-share text-xl hover:text-twitter"></i>
       </button>
@@ -62,7 +65,34 @@ const ShareButton = () => {
           </button>
           <hr className='border-grey my-2' />
         </div>
+      </div> */}
+
+
+
+
+      <button id="dropdownDelayButton" data-dropdown-toggle="dropdownDelay" data-dropdown-delay="200" data-dropdown-trigger="hover" className="text-black font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center" type="button"><i className="fi fi-rr-share text-xl hover:text-twitter"></i>
+      </button>
+
+      <div id="dropdownDelay" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+        <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDelayButton">
+          <li>
+            <a className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+          </li>
+          <li>
+            <a className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+          </li>
+          <li>
+            <a className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+          </li>
+          <li>
+            <a className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+          </li>
+        </ul>
       </div>
+
+
+
+
     </div>
   );
 };

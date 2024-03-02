@@ -8,11 +8,12 @@ const BlogPostcard = ({ content, author }) => {
     return (
         <Link to={`/blog/${id}`} className='flex gap-8 items-center boredr-b border-grey pb-5 mb-4' style={{borderBottom:"1px solid rgb(243 243 255)"}}>
             <div className='w-full' >
-                <div className='flex gap-2 items-center mb-7'>
+                <div className='flex gap-2 items-center mb-4'>
                     <img src={profile_img} className='w-6  h-6 rounded-full' />
                     <p className="line-clamp-1">
-                        {fullname} @{username}
+                        {fullname} <span>•</span>  @{username}
                     </p>
+                    <span>•</span>
                     <p className='min-w-fit'>{getDay(publishedAt)}</p>
 
                 </div>

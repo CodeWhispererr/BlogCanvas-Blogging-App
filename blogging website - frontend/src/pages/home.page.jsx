@@ -164,7 +164,7 @@ const HomePage = () => {
                 <div className="min-w-[40px] lg:min-w-[400px] max-w-min border-1 border-grey pl-8 pt-3 max-md:hidden">
                     <div className="flex flex-col gap-10">
                         <div>
-                            <h1 className="font-medium text-xl mb-8">Stories from all interests</h1>
+                            <h1 className="font-semibold text-xl mb-8 ">Explore what is important to you</h1>
 
                             <div className='flex gap-3 flex-wrap'>
                                 {
@@ -181,7 +181,7 @@ const HomePage = () => {
                         </div>
 
                         <div >
-                            <h1 className='font-medium text-xl mb-8'>Trending <i className='fi fi-rr-arrow-trend-up'></i></h1>
+                            <h1 className='font-semibold text-xl mb-8'>Trending <i className='fi fi-rr-arrow-trend-up'></i></h1>
 
                             {
                                 trendingBlogs == null ?
