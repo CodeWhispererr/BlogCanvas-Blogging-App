@@ -6,12 +6,12 @@ import { GoogleAuthProvider,getAuth, signInWithPopup } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyD3Z5aqFttIEYgbnTveebb5dZAs1NFpQes",
+  apiKey: "",
   authDomain: "blogcanvas-blog-website.firebaseapp.com",
   projectId: "blogcanvas-blog-website",
   storageBucket: "blogcanvas-blog-website.appspot.com",
-  messagingSenderId: "286777667154",
-  appId: "1:286777667154:web:eb4548cf43e3db6028f98b"
+  messagingSenderId: "",
+  appId: ""
 };
 
 // Initialize Firebase
