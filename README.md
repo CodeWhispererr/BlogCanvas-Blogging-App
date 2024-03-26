@@ -83,6 +83,6 @@ npm install
 ```bash
 npm run dev
 ``` 
-Open your browser and go to http://localhost:5173 to experience BlogMind.
+Open your browser and go to http://localhost:5173 to experience BlogCanvas.
 
 By following these steps, you'll have both the server and frontend components of BlogCanvas up and running locally. Setting environment variables ensures proper configuration of the server.
