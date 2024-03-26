@@ -1,17 +1,24 @@
-import React, { useRef } from 'react';
+import React, { useState } from 'react';
 import { Toaster, toast } from 'react-hot-toast'
 const ShareButton = () => {
-  const shareBoxRef = useRef(null);
 
-  const openShareBox = () => {
-    shareBoxRef.current.classList.toggle('hidden');
+
+  const [isIconChanged, setIconChanged] = useState(false);
+
+  const handleClick = () => {
+    setIconChanged(true);
+
+    // Revert the icon after 2 seconds
+    setTimeout(() => {
+      setIconChanged(false);
+    }, 2000);
   };
 
   const copyToClipboard = () => {
     const url = window.location.href;
     navigator.clipboard.writeText(url);
     toast.success("Link Copied")
-    openShareBox(); // Close the share box after copying the link.
+    handleClick();
   };
 
   const shareOnTwitter = () => {
@@ -19,8 +26,9 @@ const ShareButton = () => {
     const tweetUrl = window.location.href;
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(tweetUrl)}`;
     window.open(twitterUrl, '_blank');
-    openShareBox(); // Close the share box after sharing on Twitter.
   };
+
+
 
   return (
     <div className="relative inline-block">
@@ -31,64 +39,38 @@ const ShareButton = () => {
         containerClassName="notification-toast"
       />
 
+      <li className="relative px-1 pr-7 py-2 group md:mb-0" >
+        <a className="font-semibold whitespace-no-wrap text-gray hover:text-blue-800"><i className="fi fi-rr-share text-xl hover:text-twitter"></i>
+        </a>
+        <ul className="absolute right-0 top-0 mt-8 p-2 w-[200px] shadow-lg bg-white z-10 hidden group-hover:block">
+          <li className="p-3 whitespace-no-wrap  text-sm md:text-base link " onClick={copyToClipboard}>
+            <button  className="px-2 py-1" >
+              <span className="">
+                {
+                  isIconChanged ?
+                    <>
+                      <i className="fa-regular fa-circle-check text-xl mr-2" style={{ color: "#63E6BE" }}></i>
+                      &nbsp; <span style={{ color: "#63E6BE" }}>Copied 😉</span>
+                    </>
+                    :
 
+                    <>
+                      <i className="fi fi-rr-clipboard-list text-xl hover:text-twitter mr-2"></i>
+                      &nbsp; Copy Link
+                    </>
 
-      {/* <button
-        onClick={openShareBox}
-        className="text-black bg-transparent px-4 rounded-full"
-      >
-        <i className="fi fi-rr-share text-xl hover:text-twitter"></i>
-      </button>
-      <div
-        ref={shareBoxRef}
-        className="hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center"
-      >
-        <div className="bg-white rounded-lg p-3">
-          <p className='text-2xl font-medium'>Share this Blog <i className="fi fi-sr-share text-xl hover:text-twitter"></i></p>
-          <hr className='border-grey my-2' />
+                }
 
-          <button
-            onClick={shareOnTwitter}
-            className="text-blue-400 hover:text-blue-500 mr-4 flex items-center"
-          >
-            <i className='fi fi-brands-twitter text-xl hover:text-twitter mr-2 '></i>
-            <p className='hover:text-twitter'> Share on Twitter</p>
-
-          </button>
-          <hr className='border-grey my-2' />
-          <button
-            onClick={copyToClipboard}
-            className="text-gray-500 hover:text-gray-600 flex items-center"
-          >
-            <i className="fi fi-rr-clipboard-list text-xl hover:text-twitter mr-2"></i>
-            <p className='hover:text-twitter'> Copy Link</p>
-          </button>
-          <hr className='border-grey my-2' />
-        </div>
-      </div> */}
-
-
-
-
-      <button id="dropdownDelayButton" data-dropdown-toggle="dropdownDelay" data-dropdown-delay="200" data-dropdown-trigger="hover" className="text-black font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center" type="button"><i className="fi fi-rr-share text-xl hover:text-twitter"></i>
-      </button>
-
-      <div id="dropdownDelay" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
-        <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDelayButton">
-          <li>
-            <a className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+              </span>
+            </button>
           </li>
-          <li>
-            <a className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
-          </li>
-          <li>
-            <a className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
-          </li>
-          <li>
-            <a className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+          <li className="p-3 whitespace-no-wrap  text-sm md:text-base text-dark-gray link  hover:text-twitter">
+            <button onClick={shareOnTwitter} className="px-2 py-1" href="#">
+              <span> <i className='fi fi-brands-twitter text-xl hover:text-twitter mr-2 '></i>  Share on twitter</span>
+            </button>
           </li>
         </ul>
-      </div>
+      </li>
 
 
 

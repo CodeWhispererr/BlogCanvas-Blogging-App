@@ -125,3 +125,61 @@
 .cdx-settings-button[data-tune='stretched'] {
   display: none;
 }
+.group:hover .group-hover\:block {
+    display: block !important;
+  }
+  ul, ol {
+    list-style: none;
+  }
+::marker{
+    content: none;
+}
+.bookmarkdropdown{
+    top: -5px;
+}
+input[type=checkbox]{
+    accent-color: green; 
+}
+
+.ant-modal .ant-modal-content{
+    width: 50%;
+    margin: 0 auto;
+    border-radius: 0;
+    padding: 2rem;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+.ant-modal .ant-modal-title{
+    font-size: xx-large;
+}
+.ant-modal .ant-modal-footer >.ant-btn+.ant-btn{
+    background:rgb(26, 137, 23);
+    color: aliceblue;
+    text-decoration: none;
+    border-radius: 99em;
+    padding: 5px 16px;
+    border-width: 1px;
+    border-color: rgb(26, 137, 23);
+    border-style: solid;
+    text-align: center;
+    box-sizing: border-box;
+    font-size: 14px;
+    font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+}
+@media only screen and (max-width:767px){
+    .ant-modal .ant-modal-content{
+        width: 95%;
+        padding: 0.5rem;
+    }
+}
+figure{
+    height: 2rem;
+    width: 2rem;
+}
+figcaption{
+    font-size: large;
+    font-weight: 500;
+    text-align: center;
+}

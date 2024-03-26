@@ -24,6 +24,13 @@ const userSchema = mongoose.Schema({
             minlength: [3, 'Username must be 3 letters long'],
             unique: true,
         },
+        medium_username: {
+            type: String,
+        },
+        is_medium_username_set: {
+            type: Boolean,
+            default: false,
+        },
         bio: {
             type: String,
             maxlength: [200, 'Bio should not be more than 200'],
@@ -33,7 +40,7 @@ const userSchema = mongoose.Schema({
             type: String,
             default: () => {
                 return `https://api.dicebear.com/6.x/${profile_imgs_collections_list[Math.floor(Math.random() * profile_imgs_collections_list.length)]}/svg?seed=${profile_imgs_name_list[Math.floor(Math.random() * profile_imgs_name_list.length)]}`
-            } 
+            }
         },
     },
     social_links: {
@@ -62,7 +69,7 @@ const userSchema = mongoose.Schema({
             default: "",
         }
     },
-    account_info:{
+    account_info: {
         total_posts: {
             type: Number,
             default: 0
@@ -76,18 +83,34 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    blogs: {
-        type: [ Schema.Types.ObjectId ],
-        ref: 'blogs',
-        default: [],
-    }
+    blogs: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'blogs',
+            default: [],
+        },
+    ],
+    bookmarks: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'bookmarks',
+            default: [],
+        },
+    ],
+    lists: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'lists',
+            default: [],
+        },
+    ],
 
-}, 
-{ 
-    timestamps: {
-        createdAt: 'joinedAt'
-    } 
+},
+    {
+        timestamps: {
+            createdAt: 'joinedAt'
+        }
 
-})
+    })
 
 export default mongoose.model("users", userSchema);

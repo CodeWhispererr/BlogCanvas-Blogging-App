@@ -1,4 +1,4 @@
-import React, { useState,useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import { getDay } from '../common/date'
 import { UserContext } from '../App'
@@ -104,18 +104,18 @@ const deleteBlog = (blog, access_token, target) => {
                 let { deletedDocCount, totalDocs, results } = preVal;
 
                 results.splice(index, 1);
-                    
-                if(!deletedDocCount){
-                    deletedDocCount=0;
+
+                if (!deletedDocCount) {
+                    deletedDocCount = 0;
                 }
-                if(!results.length && totalDocs-1 >0){
-                        return null;
+                if (!results.length && totalDocs - 1 > 0) {
+                    return null;
                 }
 
-                return {...preVal,totalDocs:totalDocs-1,deletedDocCount: deletedDocCount+1}
+                return { ...preVal, totalDocs: totalDocs - 1, deletedDocCount: deletedDocCount + 1 }
             })
         })
-        .catch(err=>{
+        .catch(err => {
             console.log(err);
         })
 }

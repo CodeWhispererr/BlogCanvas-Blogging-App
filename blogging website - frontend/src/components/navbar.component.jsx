@@ -54,9 +54,9 @@ const Navbar = () => {
         <>
 
             <nav className='navbar z-50'>
-                <Link to="/" className="flex-none w-10">
+                <a href="/" className="flex-none w-10">
                     <img src={theme == "light" ? darkLogo : lightLogo} className="flex-none w-10" />
-                </Link>
+                </a>
 
                 {
                     new_notification_available
